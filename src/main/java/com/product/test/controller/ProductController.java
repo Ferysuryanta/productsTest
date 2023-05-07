@@ -8,16 +8,10 @@ import com.product.test.exception.ResourceNotFoundException;
 import com.product.test.model.Product;
 import com.product.test.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -29,8 +23,10 @@ public class ProductController {
 	
 	// get all employees
 	@GetMapping("/products")
-	public List<Product> getAllProducts(){
-		return productRepository.findAll();
+	public Page<Product> getAllProducts( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+		PageRequest request = PageRequest.of ( page, size );
+		Page<Product> result = productRepository.findAll(request);
+		return result;
 	}		
 	
 	// create employee rest api
